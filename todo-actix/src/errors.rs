@@ -17,7 +17,7 @@ pub struct AppError {
 }
 
 impl AppError {
-  fn message(&self) -> String {
+  pub fn message(&self) -> String {
     match &self {
       AppError{
         message: Some(message),
@@ -32,6 +32,13 @@ impl AppError {
       } => "The requested item not found".to_string(),
 
       _ => "Unexpected error".to_string()
+    }
+  }
+  pub fn db_error(err: impl ToString) -> AppError {
+    AppError{
+      message: Some(err.to_string()),
+      cause: Some(err.to_string()),
+      error_type: AppErrorType::DbError
     }
   }
 }

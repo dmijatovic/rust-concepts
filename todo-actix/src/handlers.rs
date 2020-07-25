@@ -5,7 +5,7 @@ use std::io::ErrorKind::Other;
 
 use crate::models::{Status,CreateTodoList,PostTodoItem, CreateTodoItem,ApiResponse};
 use crate::db;
-use crate::errors::{AppError,AppErrorType};
+use crate::errors::{AppError};
 
 
 // home returns json as string
@@ -23,11 +23,7 @@ pub async fn get_todo_lists(db_pool: web::Data<Pool>) -> Result<impl Responder, 
   // connect to db
   let client: Client = db_pool.get()
     .await
-    .map_err(|err| AppError{
-      message: None,
-      cause: Some(err.to_string()),
-      error_type: AppErrorType::DbError
-    })?;
+    .map_err(AppError::db_error)?;
 
   // make query
   let result = db::get_todo_lists(&client).await;
@@ -37,40 +33,48 @@ pub async fn get_todo_lists(db_pool: web::Data<Pool>) -> Result<impl Responder, 
 
 // create todo list
 #[post("/todos")]
-pub async fn create_todo_list(db_pool: web::Data<Pool>, json: web::Json<CreateTodoList>) -> impl Responder {
+pub async fn create_todo_list(db_pool: web::Data<Pool>, json: web::Json<CreateTodoList>) -> Result<impl Responder, AppError> {
 
-  let client: Client = db_pool.get().await
-    .expect("Error connecting to the database");
+  let client: Client = db_pool.get()
+    .await
+    .map_err(AppError::db_error)?;
 
   let result = db::create_todo_list(&client, json.title.clone()).await;
 
-  match result {
-    Ok(todos) => HttpResponse::Ok().json(todos),
-    Err(_) => HttpResponse::InternalServerError().into()
-  }
+  // return response
+  result.map(|todos| HttpResponse::Ok().json(todos))
+  // match result {
+  //   Ok(todos) => HttpResponse::Ok().json(todos),
+  //   Err(_) => HttpResponse::InternalServerError().into()
+  // }
 }
 
 
 // get todo items from the list
 #[get("/todos/{list_id}/items")]
-pub async fn get_list_items(db_pool: web::Data<Pool>, path: web::Path<(i32,)>) -> impl Responder {
+pub async fn get_list_items(db_pool: web::Data<Pool>, path: web::Path<(i32,)>) -> Result<impl Responder, AppError> {
 
-  let client: Client = db_pool.get().await
-    .expect("Error connecting to the database");
+  let client: Client = db_pool.get()
+    .await
+    .map_err(AppError::db_error)?;
 
   let result = db::get_list_items(&client, path.0).await;
 
-  match result {
-    Ok(items) => HttpResponse::Ok().json(items),
-    Err(_) => HttpResponse::InternalServerError().into()
-  }
+  // return response
+  result.map(|items| HttpResponse::Ok().json(items))
+
+  // match result {
+  //   Ok(items) => HttpResponse::Ok().json(items),
+  //   Err(_) => HttpResponse::InternalServerError().into()
+  // }
 }
 
 #[post("/todos/{list_id}/items")]
-pub async fn create_todo_item(db_pool: web::Data<Pool>, path: web::Path<(i32,)>,json: web::Json<PostTodoItem>) -> impl Responder {
+pub async fn create_todo_item(db_pool: web::Data<Pool>, path: web::Path<(i32,)>,json: web::Json<PostTodoItem>) -> Result<impl Responder, AppError> {
 
-  let client: Client = db_pool.get().await
-    .expect("Error connecting to the database");
+  let client: Client = db_pool.get()
+    .await
+    .map_err(AppError::db_error)?;
 
   let todo_item = CreateTodoItem{
     item: PostTodoItem{
@@ -81,11 +85,12 @@ pub async fn create_todo_item(db_pool: web::Data<Pool>, path: web::Path<(i32,)>,
   };
 
   let result = db::create_todo_item(&client, &todo_item).await;
-
-  match result {
-    Ok(items) => HttpResponse::Ok().json(items),
-    Err(_) => HttpResponse::InternalServerError().into()
-  }
+  // return response
+  result.map(|item| HttpResponse::Ok().json(item))
+  // match result {
+  //   Ok(items) => HttpResponse::Ok().json(items),
+  //   Err(_) => HttpResponse::InternalServerError().into()
+  // }
 }
 
 #[put("/todos/{list_id}/items/{item_id}")]
