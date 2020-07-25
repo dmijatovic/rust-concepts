@@ -49,6 +49,28 @@ cargo init --bin todo-actix
 # check for error
 cargo check
 
+# run project in dev
+cargo run
+# run project in release
+carg run --release
+# build
+cargo build --release
+```
+
+## Dependencies
+
+The project dependencies are specified in `Cargo.toml` file. You can add dependencies manually. There is a tool [`cargo-edit`](https://github.com/killercup/cargo-edit) you can use to add, remove and update dependencies.
+
+```bash
+# install cargo
+cargo install cargo-edit
+
+# add dependecy to project as build dependencies
+cargo add actix-rt actix-web dotenv --build
+
+# add as dev dependencies
+cargo add regex --dev
+
 ```
 
 ## Evironment variables

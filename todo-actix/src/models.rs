@@ -27,3 +27,20 @@ pub struct TodoItem{
 pub struct CreateTodoList {
   pub title: String
 }
+
+#[derive(Deserialize)]
+pub struct PostTodoItem {
+  pub title: String,
+  pub checked: bool
+}
+
+pub struct CreateTodoItem {
+  pub item: PostTodoItem,
+  pub list_id: i32
+}
+
+#[derive(Serialize)]
+pub struct ApiResponse {
+  pub status: u16,
+  pub status_text: String
+}
