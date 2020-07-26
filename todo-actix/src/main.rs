@@ -1,7 +1,8 @@
 // system
 use std::io;
 // third party
-use actix_web::{middleware, HttpServer, App};
+use actix_web::{HttpServer, App};
+use actix_web::middleware::Logger;
 
 // local modules
 mod config;
@@ -32,7 +33,7 @@ async fn main() -> io::Result<()>{
 
   HttpServer::new(move || {
     App::new()
-      .wrap(middleware::Logger::default())
+      .wrap(Logger::new("%a %r %s %b %{User-Agent}i %T"))
       .data(pool.clone())
       .service(handlers::home)
       .service(handlers::create_todo_list)
