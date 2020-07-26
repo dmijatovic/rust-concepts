@@ -19,27 +19,58 @@ function showResults(err, result){
   }
 }
 
+const todoList={
+  "title":"New todo list"
+}
+
 const todoItem = {
-  "title":"Todo item title",
+  "title":"Todo item",
   "checked": false
 }
 
 const loadTest = autocannon({
   title:"actix-todo",
   url: baseUrl,
-  connections:10,
-  duration: 3,
+  connections:50,
+  duration: 20,
   requests:[{
       method:'GET',
       path:'/',
     },{
-      method: 'POST',
-      path:'/todos/1/items',
+      method:'POST',
+      path:'/todos',
       headers:{
         'content-type':'application/json',
         'autohorization':'Bearer FAKE_JWT_KEY'
       },
-      body:JSON.stringify(todoItem)
+      body:JSON.stringify(todoList),
+      onResponse:(status, body, context)=>{
+        if (status === 200) {
+          const resp = JSON.parse(body)
+          context['list_id'] = resp['id']
+        }
+      }
+    },{
+      method: 'POST',
+      setupRequest:(req, context)=>({
+        ...req,
+        path:`/todos/${context['list_id']}/items`,
+        headers:{
+          'content-type':'application/json',
+          'autohorization':'Bearer FAKE_JWT_KEY'
+        },
+        body:JSON.stringify(todoItem)
+      })
+    },{
+      method: 'GET',
+      setupRequest:(req, context)=>({
+        ...req,
+        path:`/todos/${context['list_id']}/items`,
+        headers:{
+          'content-type':'application/json',
+          'autohorization':'Bearer FAKE_JWT_KEY'
+        }
+      })
     }
   ]
 },showResults)
