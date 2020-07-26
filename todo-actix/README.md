@@ -10,4 +10,9 @@ cargo run
 
 ```
 
-## 
+## Docker
+
+```bash
+# build docker image
+docker build . -t dv4all/rust-todo-api:0.0.1
+```

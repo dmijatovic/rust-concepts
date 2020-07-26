@@ -1,7 +1,7 @@
 // system
 use std::io;
 // third party
-use actix_web::{HttpServer, App};
+use actix_web::{middleware, HttpServer, App};
 
 // local modules
 mod config;
@@ -23,11 +23,16 @@ async fn main() -> io::Result<()>{
   // create pg connection pool
   let pool = config.pg.create_pool(NoTls).unwrap();
 
+  //logger
+  std::env::set_var("RUST_LOG", "actix_web=debug");
+  env_logger::init();
+
   //start server
   println!("Starting server on http://{}:{}",config.server.host,config.server.port);
 
   HttpServer::new(move || {
     App::new()
+      .wrap(middleware::Logger::default())
       .data(pool.clone())
       .service(handlers::home)
       .service(handlers::create_todo_list)
