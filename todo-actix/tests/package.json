@@ -1,0 +1,21 @@
+{
+  "name": "todo-actix",
+  "version": "1.0.0",
+  "description": "This sample project is done based on youtube video. It creates web api server using Rust and Actix framework.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node load_test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autocannon": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/autocannon": "^4.1.0"
+  }
+}
