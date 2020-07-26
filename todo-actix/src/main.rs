@@ -33,7 +33,7 @@ async fn main() -> io::Result<()>{
 
   HttpServer::new(move || {
     App::new()
-      .wrap(Logger::new("%a %r %s %b %{User-Agent}i %T"))
+      .wrap(Logger::new("%r - %s [%b bytes %D ms] %{User-Agent}i"))
       .data(pool.clone())
       .service(handlers::home)
       .service(handlers::create_todo_list)

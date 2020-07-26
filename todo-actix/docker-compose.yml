@@ -25,7 +25,7 @@ services:
   todo-api:
     container_name: todo-api
     build: .
-    image: dv4all/rust-todo-api:0.0.1
+    image: dv4all/rs-todo-api:0.0.2
     environment:
       SERVER.HOST: 0.0.0.0
       SERVER.PORT: 8080

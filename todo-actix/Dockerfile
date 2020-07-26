@@ -1,4 +1,4 @@
-FROM rust:1.45 as build
+FROM rust:1.45-slim as build
 
 WORKDIR /home/build
 
