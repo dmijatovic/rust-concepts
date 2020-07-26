@@ -1,0 +1,18 @@
+[package]
+name = "tls-demo"
+version = "0.1.0"
+authors = ["Dusan Mijatovic (xps2018) <d.mijatovic@dv4all.nl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "rustls-server"
+path = "src/main.rs"
+
+[dependencies]
+env_logger = "0.7"
+rustls = "0.16"
+actix-web = { version = "2.0.0", features = ["rustls"] }
+actix-files = "0.2.1"
+actix-rt = "1.0.0"
