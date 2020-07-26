@@ -14,5 +14,5 @@ cargo run
 
 ```bash
 # build docker image
-docker build . -t dv4all/rust-todo-api:0.0.1
+docker build . -t dv4all/rs-todo-api:0.0.1
 ```
