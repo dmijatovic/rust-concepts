@@ -18,7 +18,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ## Visual Studio Code
 
-You need to install rust plugin and optionally TOML file support plugin. In addition, after open first rs file VSC might advice to install additiona rust tooling. I opted yes, the following is installed using rustup toolchain installer
+You need to install rust plugin and optionally TOML file support plugin and crates (for package version assistance). In addition, after open first rs file VSC might advice to install additiona rust tooling. I opted yes, the following is installed using rustup toolchain installer
 
 ```bash
 #
@@ -75,7 +75,7 @@ cargo add regex --dev
 
 ## Evironment variables
 
-Using dotenv module we can define envroment variables using .env file in the root of the project. The variables in the .env file use . to split props. See example here for server variables
+Using dotenv module we can define envroment variables using .env file in the root of the project. The variables in the .env file use . to split props. See example here for server variables.
 
 ```env
 SERVER.HOST=localhost
