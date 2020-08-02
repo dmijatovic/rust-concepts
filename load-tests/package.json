@@ -1,0 +1,37 @@
+{
+  "name": "todo-load-tests",
+  "version": "1.0.0",
+  "description": "This sample project is done based on youtube video. It creates web api server using Rust and Actix framework.",
+  "main": "index.js",
+  "directories": {
+    "test:": "tests"
+  },
+  "scripts": {
+    "test:rs-actix": "node autocannon/load_test_actix.js",
+    "test:js-express": "node autocannon/load_test_express.js",
+    "test:py-fast": "node autocannon/load_test_fastapi.js",
+    "test:go-fiber": "node autocannon/load_test_fiber.js",
+    "test:py-flask": "node autocannon/load_test_flask.js",
+    "test:go-mux": "node autocannon/load_test_mux.js",
+    "test:ts-oak": "node autocannon/load_test_oak.js",
+    "test:js-polka": "node autocannon/load_test_polka.js",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autocannon": "^5.0.1",
+    "highcharts": "^8.1.2",
+    "highcharts-react-official": "^3.0.0",
+    "lowdb": "^1.0.0",
+    "next": "^9.4.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/autocannon": "^4.1.0"
+  }
+}
