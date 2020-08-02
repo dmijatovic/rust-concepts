@@ -20,3 +20,8 @@ pub struct TodoItem{
   pub checked: bool,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct TodoItemData{  
+  pub title: String,
+  pub checked: bool,
+}
