@@ -7,6 +7,7 @@ mod control;
 mod structs;
 mod traits;
 mod errors;
+mod options;
 
 fn mutable(){
   mutable::muted();
@@ -86,5 +87,8 @@ fn main() {
   structs();
   traits();
 
-  errors();
+  // errors();
+
+  options::use_option();
+  options::use_result();
 }
