@@ -39,6 +39,9 @@ fn control(){
   control::loop_it(7);
   control::loop_while(5);
   control::loop_for([1,2,3,4,5]);
+  control::loop_range(1,11);
+
+  control::match_cases();
 }
 
 fn structs(){

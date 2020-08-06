@@ -33,6 +33,27 @@ pub fn loop_while(stop:u8){
 
 pub fn loop_for(col:[u8;5]){
   for val in col.iter(){
-    println!("Loopint array at {}", val);
+    println!("Loop array at {}", val);
   }
+}
+
+pub fn loop_range(start:u8,end:u8){
+  for val in start..end{
+    println!("Loop range at {}", val);
+  }
+}
+
+pub fn match_cases(){
+  let country_code:u16 = 44;
+
+  let country_name:&str = match country_code{
+    31 => "Netherlands",
+    32 => "Belgium",
+    44 => "UK",
+    46 => "Sweden",
+    1..=254 => "Other country not in my list in range 1 -245",
+    _ => "High likely not a country code"
+  };
+
+  println!("{} country code is for {}", country_code,country_name);
 }
