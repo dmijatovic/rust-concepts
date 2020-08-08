@@ -11,6 +11,7 @@ mod errors;
 mod options;
 mod generics;
 mod borrow;
+mod lifetime;
 
 fn mutable(){
   mutable::muted();
@@ -87,6 +88,10 @@ fn borrowing(){
   borrow::main()
 }
 
+fn variable_lifetime(){
+  lifetime::main()
+}
+
 
 fn main() {
   println!("Basic main starts!");
@@ -104,7 +109,8 @@ fn main() {
 
   // generics::main();
 
-  borrowing();
+  // borrowing();
+  variable_lifetime();
 
   // errors();
 }
