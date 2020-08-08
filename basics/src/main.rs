@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 
 mod mutable;
 mod scalar;
@@ -8,6 +9,7 @@ mod structs;
 mod traits;
 mod errors;
 mod options;
+mod generics;
 
 fn mutable(){
   mutable::muted();
@@ -22,6 +24,10 @@ fn scalar(){
 fn compund(){
   compund::tuple();
   compund::array();
+
+  //returned touple can be destrutured
+  let (sum,mul) = compund::destructure();
+  println!("Destructured touple: {} is sum and {} is mul", sum,mul);
 }
 
 fn function(){
@@ -77,18 +83,20 @@ fn errors(){
 }
 
 fn main() {
-  println!("Hello, world!");
+  println!("Basic main starts!");
 
-  mutable();
-  scalar();
-  compund();
-  function();
-  control();
-  structs();
-  traits();
+  // mutable();
+  // scalar();
+  // compund();
+  // function();
+  // control();
+  // structs();
+  // traits();
+
+  // options::use_option();
+  // options::use_result();
+
+  generics::main();
 
   // errors();
-
-  options::use_option();
-  options::use_result();
 }
