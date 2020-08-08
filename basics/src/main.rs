@@ -10,6 +10,7 @@ mod traits;
 mod errors;
 mod options;
 mod generics;
+mod borrow;
 
 fn mutable(){
   mutable::muted();
@@ -82,6 +83,11 @@ fn errors(){
   errors::panic_now("This is my error message".to_string());
 }
 
+fn borrowing(){
+  borrow::main()
+}
+
+
 fn main() {
   println!("Basic main starts!");
 
@@ -96,7 +102,9 @@ fn main() {
   // options::use_option();
   // options::use_result();
 
-  generics::main();
+  // generics::main();
+
+  borrowing();
 
   // errors();
 }
