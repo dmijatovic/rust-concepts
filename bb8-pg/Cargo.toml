@@ -1,0 +1,15 @@
+[package]
+name = "bb8-pg"
+version = "0.1.0"
+authors = ["Dusan Mijatovic (xps2018) <d.mijatovic@dv4all.nl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bb8="0"
+bb8-postgres="0"
+tokio={version = "0", features=["full"]}
+tokio-postgres="0"
+dotenv="0"
+futures="0"
