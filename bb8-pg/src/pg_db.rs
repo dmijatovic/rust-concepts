@@ -3,6 +3,9 @@ use bb8::{Pool,RunError};
 use bb8_postgres::PostgresConnectionManager;
 use tokio_postgres::{NoTls,Error, Config, Client};
 use tokio_postgres::row::{Row};
+use std::time::Duration;
+
+use crate::todo;
 
 fn new_config()->Config{
   let mut pg_cfg = tokio_postgres::config::Config::new();
@@ -11,6 +14,7 @@ fn new_config()->Config{
   pg_cfg.user("postgres");
   pg_cfg.password("changeme");
   pg_cfg.dbname("todo_db");
+  pg_cfg.connect_timeout(Duration::new(5,0));
   return pg_cfg;
 }
 
@@ -53,7 +57,7 @@ async fn pool_query(
   pool: &Pool<PostgresConnectionManager<tokio_postgres::NoTls>>,
 ) -> Result<Vec<Row>, RunError<tokio_postgres::Error>> {
   // get connection from pool
-  let cnn = pool.get().await.unwrap();
+  let cnn = pool.get().await?;
 
   // although prepare and query_one return tokio_postgres::Error
   // `RunError` impl `From<std::error::Error>`
@@ -65,23 +69,92 @@ async fn pool_query(
   Ok(rows)
 }
 
-async fn bb8_example(){
+async fn get_todo_lists(pool: &Pool<PostgresConnectionManager<tokio_postgres::NoTls>>,
+) -> Result<Vec<Row>, RunError<tokio_postgres::Error>> {
+  // get connection from pool
+  let cnn = pool.get().await?;
+
+  // although prepare and query_one return tokio_postgres::Error
+  // `RunError` impl `From<std::error::Error>`
+  let sql = cnn.prepare("SELECT * FROM todo_list;").await?;
+
+  // let row = cnn.query_one(&stmt, &[]).await?;
+  let rows = cnn.query(&sql,&[]).await?;
+  // &sql,&[]).await?;
+  Ok(rows)
+}
+
+async fn create_pool()->Result<Pool<PostgresConnectionManager<NoTls>>,Error>{
   //create tokio configuration
   let pg_cfg = new_config();
   let pg_mgr = PostgresConnectionManager::new(pg_cfg, NoTls);
 
   // pg_mgr.
   // build a pool (default is 10 connections in the pool)
-  let pool = match Pool::builder().build(pg_mgr).await {
-    Ok(pool) => pool,
-    Err(e) => panic!("builder error: {:?}", e),
-  };
-
-  match pool_query(&pool).await {
-    Ok(result) => println!("result: {:?}", result),
-    Err(error) => eprintln!("Error occurred: {}", error),
+  match Pool::builder().build(pg_mgr).await {
+    Ok(pool) => Ok(pool),
+    Err(e) => panic!("create_pool error: {:?}", e),
   }
 }
+
+
+
+async fn bb8_example(){
+  //create tokio configuration
+  // let pg_cfg = new_config();
+  // let pg_mgr = PostgresConnectionManager::new(pg_cfg, NoTls);
+
+  // pg_mgr.
+  // build a pool (default is 10 connections in the pool)
+  // let pool = match Pool::builder().build(pg_mgr).await {
+  //   Ok(pool) => pool,
+  //   Err(e) => panic!("builder error: {:?}", e),
+  // };
+
+  let pool = match create_pool().await{
+    Ok(pool)=>pool,
+    Err(e)=> panic!("Error occurred: {}", e),
+  };
+
+  // match pool_query(&pool).await {
+  //   Ok(result) => println!("result: {:?}", result),
+  //   Err(error) => eprintln!("Error occurred: {}", error),
+  // }
+
+  // get list of todos
+  match todo::get_todos(&pool).await {
+    Ok(result) => println!("todo_lists: {:?}", result),
+    Err(error) => panic!("get_todos error: {}", error),
+  }
+  //get specific todo list by id
+  let id:i32 = 1;
+  match todo::get_todo_list(&pool,id).await {
+    Ok(result) => println!("get_todo_list: {:?}", result),
+    Err(error) => panic!("get_todo_list error: {}", error),
+  }
+
+  //add todo list
+  let title:&str = "This is my title";
+  match todo::add_todo_list(&pool,title).await {
+    Ok(result) => println!("add_todo_list: {:?}", result),
+    Err(error) => panic!("add_todo_lists error: {}", error),
+  }
+
+  //update todo list
+  let title:&str = "This is updated title";
+  match todo::update_todo_list(&pool,1,title).await {
+    Ok(result) => println!("update_list_item: {:?}", result),
+    Err(error) => panic!("update_todo_lists error: {}", error),
+  }
+
+  //delete todo list
+  match todo::delete_todo_list(&pool,7).await {
+    Ok(result) => println!("delete_list_item: {:?}", result),
+    Err(error) => panic!("delete_todo_lists error: {}", error),
+  }
+
+}
+
 
 
 

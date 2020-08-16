@@ -10,6 +10,8 @@ edition = "2018"
 bb8="0"
 bb8-postgres="0"
 tokio={version = "0", features=["full"]}
+tokio-pg-mapper = "0"
+tokio-pg-mapper-derive = "0"
 tokio-postgres="0"
 dotenv="0"
 futures="0"
