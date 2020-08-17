@@ -5,7 +5,8 @@ use tokio_postgres::{NoTls,Error, Config, Client};
 use tokio_postgres::row::{Row};
 use std::time::Duration;
 
-use crate::todo;
+use crate::todo_list;
+use crate::todo_item;
 
 fn new_config()->Config{
   let mut pg_cfg = tokio_postgres::config::Config::new();
@@ -98,65 +99,96 @@ async fn create_pool()->Result<Pool<PostgresConnectionManager<NoTls>>,Error>{
 }
 
 
-
-async fn bb8_example(){
-  //create tokio configuration
-  // let pg_cfg = new_config();
-  // let pg_mgr = PostgresConnectionManager::new(pg_cfg, NoTls);
-
-  // pg_mgr.
-  // build a pool (default is 10 connections in the pool)
-  // let pool = match Pool::builder().build(pg_mgr).await {
-  //   Ok(pool) => pool,
-  //   Err(e) => panic!("builder error: {:?}", e),
-  // };
-
-  let pool = match create_pool().await{
-    Ok(pool)=>pool,
-    Err(e)=> panic!("Error occurred: {}", e),
-  };
-
-  // match pool_query(&pool).await {
-  //   Ok(result) => println!("result: {:?}", result),
-  //   Err(error) => eprintln!("Error occurred: {}", error),
-  // }
-
+async fn todo_list_queries(pool: &Pool<PostgresConnectionManager<tokio_postgres::NoTls>>){
   // get list of todos
-  match todo::get_todos(&pool).await {
+  match todo_list::get_todos(&pool).await {
     Ok(result) => println!("todo_lists: {:?}", result),
     Err(error) => panic!("get_todos error: {}", error),
   }
   //get specific todo list by id
   let id:i32 = 1;
-  match todo::get_todo_list(&pool,id).await {
+  match todo_list::get_todo_list(&pool,id).await {
     Ok(result) => println!("get_todo_list: {:?}", result),
     Err(error) => panic!("get_todo_list error: {}", error),
   }
 
   //add todo list
   let title:&str = "This is my title";
-  match todo::add_todo_list(&pool,title).await {
+  match todo_list::add_todo_list(&pool,title).await {
     Ok(result) => println!("add_todo_list: {:?}", result),
     Err(error) => panic!("add_todo_lists error: {}", error),
   }
 
   //update todo list
   let title:&str = "This is updated title";
-  match todo::update_todo_list(&pool,1,title).await {
+  match todo_list::update_todo_list(&pool,1,title).await {
     Ok(result) => println!("update_list_item: {:?}", result),
     Err(error) => panic!("update_todo_lists error: {}", error),
   }
 
   //delete todo list
-  match todo::delete_todo_list(&pool,7).await {
+  match todo_list::delete_todo_list(&pool,7).await {
     Ok(result) => println!("delete_list_item: {:?}", result),
     Err(error) => panic!("delete_todo_lists error: {}", error),
   }
-
 }
 
 
+async fn todo_item_queries(pool: &Pool<PostgresConnectionManager<tokio_postgres::NoTls>>){
+  // get list of todos
+  match todo_item::get_todo_items(&pool,1).await {
+    Ok(result) => println!("todo_list items: {:?}", result),
+    Err(error) => panic!("get_todo_items error: {}", error),
+  }
+  //get specific todo list by id
+  let id:i32 = 1;
+  match todo_item::get_todo_item(&pool,id).await {
+    Ok(result) => println!("get_todo_item: {:?}", result),
+    Err(error) => panic!("get_todo_item error: {}", error),
+  }
 
+  //add todo list
+  let new_item = todo_item::NewTodoItem{
+    list_id:1,
+    title:"This is my title".to_string(),
+    checked: false,
+  };
+  match todo_item::add_todo_item(&pool,&new_item).await {
+    Ok(result) => println!("add_todo_item: {:?}", result),
+    Err(error) => panic!("add_todo_item error: {}", error),
+  }
+
+  //update todo list
+  let item = todo_item::TodoItem{
+    id:1,
+    list_id:1,
+    title:"This is my updated title".to_string(),
+    checked: false,
+  };
+  match todo_item::update_todo_item(&pool,&item).await {
+    Ok(result) => println!("update_todo_item: {:?}", result),
+    Err(error) => panic!("update_todo_item error: {}", error),
+  }
+
+  //delete todo list
+  match todo_item::delete_todo_item(&pool,1).await {
+    Ok(result) => println!("delete_todo_item: {:?}", result),
+    Err(error) => panic!("delete_todo_item error: {}", error),
+  }
+}
+
+async fn bb8_example(){
+  //create shared bb8 pool for postgres
+  let pool = match create_pool().await{
+    Ok(pool)=>pool,
+    Err(e)=> panic!("Error occurred: {}", e),
+  };
+
+  //excute todo list CRUD examples
+  todo_list_queries(&pool).await;
+  //excute todo item CRUD examples
+  todo_item_queries(&pool).await;
+}
 
 #[tokio::main]
 pub async fn main ()->Result<(),Error>{
@@ -168,7 +200,3 @@ pub async fn main ()->Result<(),Error>{
 
   Ok(())
 }
-
-// pub fn main(){
-
-// }

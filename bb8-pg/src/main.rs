@@ -1,6 +1,7 @@
 
 mod pg_db;
-mod todo;
+mod todo_list;
+mod todo_item;
 
 fn main() {
     println!("Hello, world!");
