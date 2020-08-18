@@ -1,0 +1,17 @@
+[package]
+name = "sqlx-pg"
+version = "0.0.1"
+authors = ["Dusan Mijatovic (xps2018) <d.mijatovic@dv4all.nl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.openssl]
+version = "0.10.29"
+features = [
+    "vendored"
+]
+
+[dependencies]
+tokio={version = "0", features=["full"]}
+sqlx={version="0.3", default-features = false, features = ["runtime-tokio", "macros","postgres"] }
