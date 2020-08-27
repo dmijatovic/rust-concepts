@@ -1,10 +1,6 @@
-use sqlx::postgres::{PgPool,PgRow};
+use sqlx::postgres::{PgPool};
 #[allow(unused_imports)]
 use sqlx::postgres::PgQueryAs;
-use sqlx::Row;
-// use sqlx::QueryAs;
-// use std::error::Error;
-// use sqlx::postgres::;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct TodoList{
@@ -31,11 +27,7 @@ pub async fn get_todos(pool: &PgPool){
   // `RunError` impl `From<std::error::Error>`
   let raw_sql = "SELECT * FROM todo_list;";
 
-  let rows = sqlx::postgres::PgQueryAs
-
-
-    .fetch_all(pool)
-    .await;
+  let rows = sqlx::query("SELECT * FROM todo_list;").fetch(pool).await;
     // .iter()
     // .collect::<Vec<TodoList>>();
 
