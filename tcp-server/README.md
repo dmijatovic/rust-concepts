@@ -55,3 +55,12 @@ TryFrom requires implementation of custom error. As it might fail TryFrom return
 The custom errors need to implement standard error. The standard Error trait can only implemented for types that also implement Debug + Display (see trait signiture).
 
 For implementation see http/error.rs module which implements ParseError.
+
+## Lifetime
+
+Then working with references it is required to define lifetime for references in order to avoid dangling references.
+
+```rs
+
+
+```

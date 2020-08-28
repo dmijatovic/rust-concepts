@@ -28,8 +28,7 @@ impl ParseError{
       Self::InvalidRequest => {"Invalid request"},
       Self::InvalidEncoding => {"Invalid encoding"},
       Self::InvalidProtocol => {"Invalid protocol"},
-      Self::InvalidMethod => {"Invalid method"},
-      _ => {"Unknown Parse Error"},
+      Self::InvalidMethod => {"Invalid method"}
     }
   }
 }
