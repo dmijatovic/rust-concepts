@@ -12,10 +12,26 @@ use super::query_string::{Params, params_from_str};
 
 #[derive(Debug)]
 pub struct Request<'buf>{
-  pub path: &'buf str,
-  pub params: Option<Params<'buf>>,
-  pub method: Method,
+  path: &'buf str,
+  params: Option<Params<'buf>>,
+  method: Method,
   body: &'buf str,
+}
+
+// defined prop getters
+// the props are read only
+impl<'buf> Request<'buf>{
+  pub fn path(&self) -> &str{
+    &self.path
+  }
+  #[allow(dead_code)]
+  pub fn params(&self) -> Option<&Params<'buf>>{
+    //return reference to params values
+    self.params.as_ref()
+  }
+  pub fn method(&self) -> &Method{
+    &self.method
+  }
 }
 
 // implementing TryFrom trait. It needs

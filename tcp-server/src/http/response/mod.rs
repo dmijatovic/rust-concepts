@@ -3,7 +3,7 @@
 // Note! changed to send method on response
 // use std::fmt::{Display,Formatter, Result as FmtResult};
 // for writing response
-use std::net::TcpStream;
+// use std::net::TcpStream;
 use std::io::{Write, Result as IoResult};
 
 pub mod status;
@@ -32,7 +32,7 @@ impl Response{
     }
   }
   //send response
-  pub fn send(&self, stream: &mut TcpStream)->IoResult<()>{
+  pub fn send(&self, stream: &mut impl Write)->IoResult<()>{
      // get body content
     let body = match &self.body{
       Some(b)=>b,

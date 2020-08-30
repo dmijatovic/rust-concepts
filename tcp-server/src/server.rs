@@ -4,7 +4,7 @@ use std::net::{TcpListener};
 // import train in order to be able to use it
 // use std::convert::TryFrom;
 
-use crate::http::{Request, Response, StatusCode};
+use crate::http::{Request, Handler};
 
 
 #[derive(Debug)]
@@ -16,7 +16,7 @@ impl Server{
   pub fn new(addr:String) -> Self{
     Self{addr}
   }
-  pub fn listen(&self){
+  pub fn listen(&self, mut handler: impl Handler){
     let mut buffer=[0; 1024];
     // we pass
     let sock:TcpListener = match TcpListener::bind(&self.addr){
@@ -36,25 +36,21 @@ impl Server{
             &mut stream, &mut buffer){
             Ok(req)=>{
               // println!("read...path...{}", req);
-              let log:String = format!("{} {}",
-                req.method.to_str(),
-                req.path
-              );
-              Response::new(
-                StatusCode::OK,
-                log,
-                None,
-                Some(format!("<h1>Request received</h1><p>{:?}</p>", req))
-              )
+              // let log:String = format!("{} {}",
+              //   req.method.to_str(),
+              //   req.path
+              // );
+              // Response::new(
+              //   StatusCode::OK,
+              //   log,
+              //   None,
+              //   Some(format!("<h1>Request received</h1><p>{:?}</p>", req))
+              // )
+              handler.handle_request(&req)
             },
             Err(e)=>{
-              dbg!(e);
-              Response::new(
-                StatusCode::BadRequest,
-                String::from("?..."),
-                None,
-                None
-              )
+              //return error response
+              handler.handle_bad_request(&e)
             }
           };
           // println!("response {:?}", &response);
