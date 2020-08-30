@@ -17,6 +17,13 @@ impl StatusCode {
       Self::NotFound => "Not Found"
     }
   }
+  pub fn to_str(&self) -> &str{
+    match self {
+      Self::OK => "200 OK",
+      Self::BadRequest => "400 Bad Request",
+      Self::NotFound => "404 Not Found"
+    }
+  }
 }
 
 impl Display for StatusCode {

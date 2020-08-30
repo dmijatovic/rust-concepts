@@ -28,3 +28,15 @@ impl FromStr for Method{
     }
   }
 }
+
+impl Method {
+  pub fn to_str(&self)->String{
+    match self{
+      Method::GET=>String::from("GET"),
+      Method::POST=>String::from("POST"),
+      Method::PUT=>String::from("PUT"),
+      Method::DELETE=>String::from("DELETE"),
+      Method::OPTIONS=>String::from("OPTIONS"),
+    }
+  }
+}

@@ -1,10 +1,10 @@
 //pull read trait
-use std::io::{Read};
-use std::net::{TcpListener, TcpStream};
+// use std::io::{Read};
+use std::net::{TcpListener};
 // import train in order to be able to use it
-use std::convert::TryFrom;
+// use std::convert::TryFrom;
 
-use crate::http::{Request, ParseError, Response, StatusCode};
+use crate::http::{Request, Response, StatusCode};
 
 
 #[derive(Debug)]
@@ -36,16 +36,22 @@ impl Server{
             &mut stream, &mut buffer){
             Ok(req)=>{
               // println!("read...path...{}", req);
+              let log:String = format!("{} {}",
+                req.method.to_str(),
+                req.path
+              );
               Response::new(
                 StatusCode::OK,
+                log,
                 None,
-                Some(format!("<p>{:?}</p>", req))
+                Some(format!("<h1>Request received</h1><p>{:?}</p>", req))
               )
             },
             Err(e)=>{
               dbg!(e);
               Response::new(
                 StatusCode::BadRequest,
+                String::from("?..."),
                 None,
                 None
               )
@@ -55,7 +61,8 @@ impl Server{
           if let Err(e) = response.send(&mut stream){
             println!("Failed to respond {:?}",e);
           } else {
-            println!("SEND response {:?}", &response);
+            println!("{}...{}", response.log,response.status.to_str());
+            // println!("SEND response 200 OK");
           };
         },
         Err(e)=>{
