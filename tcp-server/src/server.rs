@@ -1,31 +1,15 @@
 //pull read trait
-use std::io::Read;
-use std::net::TcpListener;
+use std::io::{Read};
+use std::net::{TcpListener, TcpStream};
 // import train in order to be able to use it
 use std::convert::TryFrom;
 
-use crate::http::Request;
+use crate::http::{Request, ParseError, Response, StatusCode};
+
 
 #[derive(Debug)]
 pub struct Server{
   addr: String,
-}
-
-pub fn read(stream: &mut std::net::TcpStream){
-  //create array buffer of 512 filled with 0
-  let mut buffer = [0; 512];
-  match stream.read(&mut buffer){
-    Ok(_)=>{
-      // println!("Received request: {}",String::from_utf8_lossy(&buffer));
-      //convert incoming stream into request object
-      // we need to convert out fixed buffer into slice reference
-      // hence &buffer[..]
-      let req = Request::try_from(&buffer[..]).unwrap();
-      println!("request: {:?}", req);
-
-    },
-    Err(e)=>{println!("Failed to read: {:?}", e)}
-  }
 }
 
 impl Server{
@@ -33,6 +17,7 @@ impl Server{
     Self{addr}
   }
   pub fn listen(&self){
+    let mut buffer=[0; 1024];
     // we pass
     let sock:TcpListener = match TcpListener::bind(&self.addr){
       Ok(sock)=>{
@@ -46,13 +31,35 @@ impl Server{
     loop {
       // accept connections
       match sock.accept(){
-        Ok((mut stream, addr))=>{
-          println!("new client {:?}", addr);
-          //read incoming message from stream
-          read(&mut stream)
+        Ok((mut stream, _addr))=>{
+          let response = match Request::new_from_stream(
+            &mut stream, &mut buffer){
+            Ok(req)=>{
+              // println!("read...path...{}", req);
+              Response::new(
+                StatusCode::OK,
+                None,
+                Some(format!("<p>{:?}</p>", req))
+              )
+            },
+            Err(e)=>{
+              dbg!(e);
+              Response::new(
+                StatusCode::BadRequest,
+                None,
+                None
+              )
+            }
+          };
+          // println!("response {:?}", &response);
+          if let Err(e) = response.send(&mut stream){
+            println!("Failed to respond {:?}",e);
+          } else {
+            println!("SEND response {:?}", &response);
+          };
         },
         Err(e)=>{
-          dbg!("Failed to accept {:?}",e);
+          println!("Failed to accept {:?}",e);
         }
       }
     }

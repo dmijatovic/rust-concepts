@@ -61,6 +61,17 @@ For implementation see http/error.rs module which implements ParseError.
 Then working with references it is required to define lifetime for references in order to avoid dangling references.
 
 ```rs
-
-
+// example lifetime definition on struct
+// because it uses string pointers (&str)
+#[derive(Debug)]
+pub struct Request<'buf>{
+  path: &'buf str,
+  params: Option<Params<'buf>>,
+  method: Method,
+  body: &'buf str,
+}
 ```
+
+## Writing to stream
+
+In the std::io library Read and Write traits are implemented for number of different usecases, file, stream etc. As stream also implements write we can use write! macro to write to a stream. This info can be seen at implementors section on [std docs site](https://doc.rust-lang.org/std/io/trait.Write.html#implementors).

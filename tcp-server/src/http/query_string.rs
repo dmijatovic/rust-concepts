@@ -2,45 +2,65 @@ use std::collections::HashMap;
 
 // a=1&b=2&c=1&c=3
 
-#[derive(Debug)]
-pub enum Value<'buf>{
-  Single(&'buf str),
-  Multi(Vec<&'buf str>),
-}
+// #[derive(Debug)]
+// pub enum Value<'buf>{
+//   Single(&'buf str),
+//   Multi(Vec<&'buf str>),
+// }
 
+#[derive(Debug)]
 pub struct QueryString<'buf>{
-  data: HashMap<&'buf str,Value<'buf>>
+  data: HashMap<&'buf str, &'buf str>
 }
 
 impl<'buf> QueryString<'buf>{
-  pub fn get(&self, key: &str) -> Option<&Value>{
-    self.data.get(key)
+  pub fn new()->Self{
+    QueryString{
+      data: HashMap::new()
+    }
+  }
+  // pub fn get(&self, key: &'buf str) -> Option<&'buf str>{
+  //   self.data.get(key)
+  // }
+  pub fn set(&mut self, key: &'buf str, val: &'buf str){
+    self.data.insert(key, val);
   }
 }
 
 impl<'buf> From<&'buf str> for QueryString<'buf>{
   fn from(s: &'buf str) -> Self{
-    let mut data = HashMap::new();
+    // let mut data = HashMap::new();
+    let mut qp = QueryString::new();
 
     for param in s.split("&"){
       // split on =
       let v:Vec<&str> = param.split("=").collect();
-
-      let e = data.entry(v[0]);
-      println!("{:?}", e);
-      // e.and_modify(|val: &mut Value| match val{
-      //       Value::Single(prev) => {
-      //         // let mut vec = vec![prev,v[1]];
-      //         *val = Value::Multi(vec![v1]);
-      //       }
-      //       Value::Multi(vec)=>{vec.push(v[1])}
-      //     }
-      //   ).or_insert(Value::Single(v[1]))
-
-      // data.insert(v[0],v[1]);
+      // it will insert single value type
+      // data.entry(v[0]).or_insert(v[1]);
+      qp.set(v[0], v[1]);
     }
     // return
-    QueryString{data}
+    // QueryString{data}
+    return qp;
   }
 }
 
+//very simple hashmap to save received params
+
+pub type Params<'buf> = HashMap<&'buf str, &'buf str>;
+
+pub fn params_from_str(s: &str)-> Params{
+
+  let mut qp = Params::new();
+
+  for param in s.split("&"){
+    // split on =
+    let v:Vec<&str> = param.split("=").collect();
+    // it will insert single value type
+    // data.entry(v[0]).or_insert(v[1]);
+    qp.insert(v[0], v[1]);
+  }
+  // return
+  // QueryString{data}
+  return qp;
+}
