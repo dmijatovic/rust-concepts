@@ -27,6 +27,10 @@ rustup component add rust-analyses --toolchain stable-x86_64-unknown-linux-gnu
 rustup component add rust-src --toolchain stable-x86_64-unknown-linux-gnu
 ```
 
+### Rust-analyzer plugin and debugging
+
+For debugging in VCS I installed rust-analyzer and [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) plugins.
+
 ## Basic commands
 
 ```bash
