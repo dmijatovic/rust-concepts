@@ -2,7 +2,7 @@ use deadpool_postgres::{Pool, PoolError};
 use tokio_postgres::row::Row;
 use tokio_postgres::types::ToSql;
 
-use crate::schema::TodoList;
+use crate::graphql::TodoList;
 
 // map return from tokio:postreges into stuct
 impl From<&Row> for TodoList {

@@ -11,8 +11,9 @@ actix-web = "3.0.0-beta.3"
 serde = "1"
 serde_derive = "1"
 serde_json = "1"
-# GraphQL engine: it needs to use async-await branch from github
-# to support async database calls
+# GraphQL engine
+# Note! It needs to use tokio to support
+# async-await from deadpool and tokio-postgres
 juniper = { version="0"}
 pretty_env_logger = "0"
 tokio="0"
