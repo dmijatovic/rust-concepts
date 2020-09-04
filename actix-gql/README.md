@@ -4,6 +4,8 @@ This example is attempt to implement graphQL with actix-web v3. This is new vers
 
 For graphQL implementation most popular solution seem to be juniper.
 
+Note! The performance of this api is measured using the same tool (autocannon) as I did in my [todo-api-bench](https://github.com/dmijatovic/todo-api-bench) project. `This approach is slower that any approach used in todo-api-bench project`. The load test (30 sec.) with this api produces about 30k successfull request, while actix-web without graphQL produces about 170k successfull request on the same machine. This is quite significant difference in the performance.
+
 ## Usage
 
 This test todo api with actix and juniper (GraphQL) can use runned using docker-compose
