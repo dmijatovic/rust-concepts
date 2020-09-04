@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate log;
+
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use std::env;
@@ -36,12 +39,15 @@ async fn main() -> std::io::Result<()> {
   let cfg = get_server_env();
   // define host
   let host = format!("{}:{}", cfg.host, cfg.port);
-  // show this
-  println!("Starting http server at {:?}", host);
+  // println!("Starting http server at {:?}", host);
 
   // enable logger
-  std::env::set_var("RUST_LOG", "actix_web=info");
-  pretty_env_logger::init();
+  // std::env::set_var("RUST_LOG", "actix_web=info");
+  std::env::set_var("RUST_LOG", "info");
+  env_logger::init();
+
+  // show this
+  info!("Starting http server at {:?}", host);
 
   // create db connection pool
   let pool = db::create_pool().await;

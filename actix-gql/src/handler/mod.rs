@@ -1,6 +1,5 @@
 use actix_files;
-use actix_files::NamedFile;
-use actix_web::{get, web, web::ServiceConfig, HttpResponse};
+use actix_web::{get, web::ServiceConfig, HttpResponse};
 
 use crate::graphql as gql;
 
