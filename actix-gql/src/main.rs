@@ -51,7 +51,7 @@ async fn main() -> std::io::Result<()> {
       .wrap(Logger::default())
       .data(pool.clone())
       .configure(handler::register)
-      .default_service(web::to(|| async { "404 Page not found".to_string() }))
+      .default_service(web::to(handler::page404))
   })
   .bind(host)?
   .workers(cfg.workers.into())
